@@ -2,24 +2,10 @@ package main
 
 import (
     "fmt"
-    "strings"
     "bytes"
-    "strconv"
     "reflect"
+    qb "github.com/CodeTeam/query_builder"
 )
-
-type Query struct {
-    TypeQuery string
-    Columns []interface{}
-    TableName string
-    WhereCond []WhereStruct
-}
-
-type WhereStruct struct {
-    Expression string
-    Value interface{}
-    Delimiter string
-}
 
 func main() {
     var buffer bytes.Buffer
@@ -29,7 +15,7 @@ func main() {
 
     fmt.Println("test")
    
-    b := Select("field1", "field2", "field3", "field4").
+    b := qb.Select("field1", "field2", "field3", "field4").
     From("table 1").
     Where("field1 = ?", 1).
     And("field2 = ?", 2).
@@ -43,7 +29,7 @@ func main() {
     fmt.Println(reflect.TypeOf(l))
 }
 
-func interfaceToString(input_int []interface{}) []string {
+/*func interfaceToString(input_int []interface{}) []string {
     length := len(input_int)
     columns := make([]string, length)
     for index, element := range input_int {
@@ -121,4 +107,4 @@ func (query *Query) And(query_str string, value interface{}) *Query {
 func (query *Query) Or(query_str string, value interface{}) *Query {
 	query.WhereCond = append(query.WhereCond, WhereStruct{Expression: query_str, Value: value, Delimiter: " Or "})
 	return query
-}
+}*/
