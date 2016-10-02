@@ -5,6 +5,7 @@ import (
     "strings"
     "bytes"
     "strconv"
+    "reflect"
 )
 
 type Query struct {
@@ -17,6 +18,7 @@ type Query struct {
 type WhereStruct struct {
     Expression string
     Value interface{}
+    Delimiter string
 }
 
 func main() {
@@ -27,11 +29,18 @@ func main() {
 
     fmt.Println("test")
    
-    b := Select("field1", "field2").From("table 1").Where("field1 = ?", 1)
+    b := Select("field1", "field2", "field3", "field4").
+    From("table 1").
+    Where("field1 = ?", 1).
+    And("field2 = ?", 2).
+    Or("field3 = ?", "sfsdfds").
+    And("field4 IN ?", []int{1,2,3,4,5})
     fmt.Println(b)
     fmt.Println(b.Columns)
     fmt.Println(b.BuildQuery())
     fmt.Println(b.WhereCond)
+    l := []int{1,2,3,4}
+    fmt.Println(reflect.TypeOf(l))
 }
 
 func interfaceToString(input_int []interface{}) []string {
@@ -54,8 +63,13 @@ func (query *Query) BuildQuery() string {
     buffer.WriteString(query.TableName)
 
     buffer.WriteString(" Where ")
-    for _, element := range query.WhereCond {
-        buffer.WriteString(convertValueToString(element.Expression, element.Value))
+    for index, element := range query.WhereCond {
+        if index == 0 {
+            buffer.WriteString(convertValueToString(element.Expression, element.Value))
+        } else {
+            buffer.WriteString(element.Delimiter)
+            buffer.WriteString(convertValueToString(element.Expression, element.Value))
+        }
     }
     return buffer.String()
 }
@@ -65,6 +79,17 @@ func convertValueToString(expr string, value interface{}) string {
     switch value := value.(type) {
         case int:          
             result = strings.Replace(expr, "?", strconv.Itoa(int(value)), -1)
+        case string:
+            result = strings.Replace(expr, "?", value, -1)
+        case []int:
+            var res bytes.Buffer
+            for index, el := range value {
+                res.WriteString(strconv.Itoa(int(el)))
+                if index != len(value) -1 {
+                    res.WriteString(", ")
+                }
+            }
+            result = strings.Replace(expr, "?", res.String(), -1)
 
     }
     return result
@@ -84,7 +109,16 @@ func (query *Query) From(table string) *Query {
 }
 
 func (query *Query) Where(query_str string, value interface{}) *Query {
-
 	query.WhereCond = append(query.WhereCond, WhereStruct{Expression: query_str, Value: value})
+	return query
+}
+
+func (query *Query) And(query_str string, value interface{}) *Query {
+	query.WhereCond = append(query.WhereCond, WhereStruct{Expression: query_str, Value: value, Delimiter: " And "})
+	return query
+}
+
+func (query *Query) Or(query_str string, value interface{}) *Query {
+	query.WhereCond = append(query.WhereCond, WhereStruct{Expression: query_str, Value: value, Delimiter: " Or "})
 	return query
 }
