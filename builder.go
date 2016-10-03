@@ -15,7 +15,7 @@ func (query *Query) BuildQuery() string {
 	buffer.WriteString(" From ")
 	buffer.WriteString(query.TableName)
 
-	if len(query.WhereCond) == 0 {
+	if len(query.WhereCond) != 0 {
 		buffer.WriteString(" Where ")
 		for index, element := range query.WhereCond {
 			if index == 0 {

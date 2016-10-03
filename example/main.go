@@ -9,8 +9,6 @@ import (
 
 func main() {
 	var buffer bytes.Buffer
-	buffer.WriteString("sdfsdfs")
-	buffer.WriteString(" 111")
 	fmt.Println(buffer.String())
 
 	fmt.Println("test")
@@ -32,7 +30,7 @@ func main() {
 		Where("field1 = ?", 1).
 		Or("field3 = ?", "sfsdfds").
 		And("field4 IN (?)", []int{1, 2, 3, 4, 5}).
-		And("field2 IN (?)", subquery.BuildQuery())
+		Or("field2 IN (?)", subquery1.BuildQuery())
 
 	fmt.Println(b1.BuildQuery())
 
