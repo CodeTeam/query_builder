@@ -9,7 +9,7 @@ type Query struct {
 	Columns       []interface{}
 	TableName     string
 	WhereCond     []WhereStruct
-	GroupByStruct []interface{}
+	GroupByStruct interface{}
 }
 
 type WhereStruct struct {
@@ -51,7 +51,7 @@ func (query *Query) Or(query_str string, value interface{}) *Query {
 	return query
 }
 
-func (query *Query) GroupBy(values []interface{}) *Query {
+func (query *Query) GroupBy(values interface{}) *Query {
 	query.GroupByStruct = values
 	return query
 }
