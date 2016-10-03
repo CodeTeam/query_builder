@@ -21,12 +21,12 @@ func (query *Query) BuildQuery() string {
 		for index, element := range query.WhereCond {
 			if index == 0 {
 				buffer.WriteString(
-					strings.Replace(element.Expression, "?", convertValueToString(element.Value), "-1")
+					strings.Replace(element.Expression, "?", convertValueToString(element.Value), "-1"),
 				)
 			} else {
 				buffer.WriteString(element.Delimiter)
 				buffer.WriteString(
-					strings.Replace(expr, "?", convertValueToString(element.Expression, element.Value), "-1")
+					strings.Replace(expr, "?", convertValueToString(element.Expression, element.Value), "-1"),
 				)
 			}
 		}
@@ -36,7 +36,7 @@ func (query *Query) BuildQuery() string {
 		buffer.WriteString(" Group By ")
 		for index, element := range query.GroupBy {
 			buffer.WriteString(
-				convertValueToString(element.Value)
+				convertValueToString(element.Value),
 			)
 		}
 	}
