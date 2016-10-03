@@ -30,7 +30,8 @@ func main() {
 		Where("field1 = ?", 1).
 		Or("field3 = ?", "sfsdfds").
 		And("field4 IN (?)", []int{1, 2, 3, 4, 5}).
-		Or("field2 IN (?)", subquery1.BuildQuery())
+		Or("field2 IN (?)", subquery1.BuildQuery()).
+		GroupBy("field1").GroupBy("field2").GroupBy("field3")
 
 	fmt.Println(b1.BuildQuery())
 

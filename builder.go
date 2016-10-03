@@ -34,11 +34,11 @@ func (query *Query) BuildQuery() string {
 
 	if len(query.GroupByStruct) != 0 {
 		buffer.WriteString(" Group By ")
-		for _, element := range query.GroupByStruct {
-			buffer.WriteString(
-				convertValueToString(element),
-			)
+		var res [len(query.GroupByStruct)]string
+		for index, element := range query.GroupByStruct {
+			res[index] = convertValueToString(element)
 		}
+		buffer.WriteString(strings.Join(res[:], ", "))
 	}
 	buffer.WriteString(";")
 	return buffer.String()
