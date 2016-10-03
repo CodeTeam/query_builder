@@ -26,7 +26,7 @@ func (query *Query) BuildQuery() string {
 			} else {
 				buffer.WriteString(element.Delimiter)
 				buffer.WriteString(
-					strings.Replace(expr, "?", convertValueToString(element.Expression, element.Value), -1),
+					strings.Replace(element.Expression, "?", convertValueToString(element.Value), -1),
 				)
 			}
 		}
@@ -34,7 +34,7 @@ func (query *Query) BuildQuery() string {
 
 	if len(query.GroupBy) != 0 {
 		buffer.WriteString(" Group By ")
-		for index, element := range query.GroupBy {
+		for index, element := range query.GroupByStruct {
 			buffer.WriteString(
 				convertValueToString(element.Value),
 			)

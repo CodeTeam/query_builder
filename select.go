@@ -5,11 +5,11 @@ import (
 )
 
 type Query struct {
-	TypeQuery string
-	Columns   []interface{}
-	TableName string
-	WhereCond []WhereStruct
-	GroupBy   []interface{}
+	TypeQuery     string
+	Columns       []interface{}
+	TableName     string
+	WhereCond     []WhereStruct
+	GroupByStruct []interface{}
 }
 
 type WhereStruct struct {
@@ -52,6 +52,6 @@ func (query *Query) Or(query_str string, value interface{}) *Query {
 }
 
 func (query *Query) GroupBy(values ...interface{}) *Query {
-	query.WhereCond = values
+	query.GroupByStruct = values
 	return query
 }
