@@ -1,32 +1,41 @@
 package main
 
 import (
-    "fmt"
-    "bytes"
-    "reflect"
-    qb "github.com/CodeTeam/query_builder"
+	"bytes"
+	"fmt"
+
+	qb "github.com/CodeTeam/query_builder"
 )
 
 func main() {
-    var buffer bytes.Buffer
-    buffer.WriteString("sdfsdfs")
-    buffer.WriteString(" 111")
-    fmt.Println(buffer.String())
+	var buffer bytes.Buffer
+	buffer.WriteString("sdfsdfs")
+	buffer.WriteString(" 111")
+	fmt.Println(buffer.String())
 
-    fmt.Println("test")
-   
-    b := qb.Select("field1", "field2", "field3", "field4").
-    From("table 1").
-    Where("field1 = ?", 1).
-    And("field2 = ?", 2).
-    Or("field3 = ?", "sfsdfds").
-    And("field4 IN ?", []int{1,2,3,4,5})
-    fmt.Println(b)
-    fmt.Println(b.Columns)
-    fmt.Println(b.BuildQuery())
-    fmt.Println(b.WhereCond)
-    l := []int{1,2,3,4}
-    fmt.Println(reflect.TypeOf(l))
+	fmt.Println("test")
+
+	subquery := qb.Select("f1").From("table2")
+	subquery1 := qb.Select("field1", "field2", "field3", "field4").From("table2")
+
+	b := qb.Select("field1", "field2", "field3", "field4").
+		From("table 1").
+		Where("field1 = ?", 1).
+		Or("field3 = ?", "sfsdfds").
+		And("field4 IN (?)", []int{1, 2, 3, 4, 5}).
+		And("field2 IN (?)", subquery.BuildQuery())
+
+	fmt.Println(b.BuildQuery())
+
+	b1 := qb.Select("field1", "field2", "field3", "field4").
+		FromSubquery(subquery1.BuildQuery()).
+		Where("field1 = ?", 1).
+		Or("field3 = ?", "sfsdfds").
+		And("field4 IN (?)", []int{1, 2, 3, 4, 5}).
+		And("field2 IN (?)", subquery.BuildQuery())
+
+	fmt.Println(b1.BuildQuery())
+
 }
 
 /*func interfaceToString(input_int []interface{}) []string {
@@ -63,7 +72,7 @@ func (query *Query) BuildQuery() string {
 func convertValueToString(expr string, value interface{}) string {
     var result string
     switch value := value.(type) {
-        case int:          
+        case int:
             result = strings.Replace(expr, "?", strconv.Itoa(int(value)), -1)
         case string:
             result = strings.Replace(expr, "?", value, -1)
