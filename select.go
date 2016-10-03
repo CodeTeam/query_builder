@@ -31,7 +31,7 @@ func (query *Query) From(table string) *Query {
 }
 
 func (query *Query) FromSubquery(table string) *Query {
-	query.TableName = strings
+	query.TableName = "(" + table + ")"
 	return query
 }
 
