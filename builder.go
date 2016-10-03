@@ -22,6 +22,7 @@ func (query *Query) BuildQuery() string {
 			if index == 0 {
 				buffer.WriteString(
 					strings.Replace(element.Expression, "?", convertValueToString(element.Value), "-1")
+				)
 			} else {
 				buffer.WriteString(element.Delimiter)
 				buffer.WriteString(
