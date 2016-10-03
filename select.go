@@ -9,6 +9,7 @@ type Query struct {
 	Columns   []interface{}
 	TableName string
 	WhereCond []WhereStruct
+	GroupBy   []interface{}
 }
 
 type WhereStruct struct {
@@ -47,5 +48,10 @@ func (query *Query) And(query_str string, value interface{}) *Query {
 
 func (query *Query) Or(query_str string, value interface{}) *Query {
 	query.WhereCond = append(query.WhereCond, WhereStruct{Expression: query_str, Value: value, Delimiter: " Or "})
+	return query
+}
+
+func (query *Query) GroupBy(values ...interface{}) *Query {
+	query.WhereCond = values
 	return query
 }
