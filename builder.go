@@ -32,7 +32,7 @@ func (query *Query) BuildQuery() string {
 		}
 	}
 
-	if len(query.GroupBy) != 0 {
+	if len(query.GroupByStruct) != 0 {
 		buffer.WriteString(" Group By ")
 		for index, element := range query.GroupByStruct {
 			buffer.WriteString(
