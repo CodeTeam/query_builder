@@ -5,11 +5,12 @@ import (
 )
 
 type Query struct {
-	TypeQuery     string
-	Columns       []interface{}
-	TableName     string
-	WhereCond     []WhereStruct
-	GroupByStruct []interface{}
+	TypeQuery      string
+	Columns        []interface{}
+	TableName      string
+	WhereCond      []WhereStruct
+	GroupByStruct  []interface{}
+	DistinctStruct bool
 }
 
 type WhereStruct struct {
@@ -53,5 +54,11 @@ func (query *Query) Or(query_str string, value interface{}) *Query {
 
 func (query *Query) GroupBy(value interface{}) *Query {
 	query.GroupByStruct = append(query.GroupByStruct, value)
+	return query
+}
+
+// Distinct - add Distinct to sql queru
+func (query *Query) Distinct() *Query {
+	query.DistinctStruct = true
 	return query
 }

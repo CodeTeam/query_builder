@@ -14,7 +14,7 @@ func main() {
 	fmt.Println("test")
 
 	subquery := qb.Select("f1").From("table2")
-	subquery1 := qb.Select("field1", "field2", "field3", "field4").From("table2")
+	subquery1 := qb.Select("field1", "field2", "field3", "field4").Distinct().From("table2")
 
 	b := qb.Select("field1", "field2", "field3", "field4").
 		From("table 1").
@@ -24,6 +24,7 @@ func main() {
 		And("field2 IN (?)", subquery.BuildQuery())
 
 	fmt.Println(b.BuildQuery())
+	fmt.Println(b.DistinctStruct)
 
 	b1 := qb.Select("field1", "field2", "field3", "field4").
 		FromSubquery(subquery1.BuildQuery()).

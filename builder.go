@@ -8,8 +8,14 @@ import (
 //BuildQuery - get sql string from expression
 func (query *Query) BuildQuery() string {
 	var buffer bytes.Buffer
+
 	buffer.WriteString(query.TypeQuery)
-	buffer.WriteString(" ")
+
+	if query.DistinctStruct == true {
+		buffer.WriteString(" Distinct ")
+	} else {
+		buffer.WriteString(" ")
+	}
 	columns := interfaceToString(query.Columns)
 	buffer.WriteString(strings.Join(columns[:], ", "))
 
