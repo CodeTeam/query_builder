@@ -9,8 +9,10 @@ type Query struct {
 	Columns        []interface{}
 	TableName      string
 	WhereCond      []WhereStruct
+	HavingCond     []WhereStruct
 	GroupByStruct  []interface{}
 	DistinctStruct bool
+	IsWhere        bool
 }
 
 type WhereStruct struct {
@@ -39,16 +41,25 @@ func (query *Query) FromSubquery(table string) *Query {
 
 func (query *Query) Where(query_str string, value interface{}) *Query {
 	query.WhereCond = append(query.WhereCond, WhereStruct{Expression: query_str, Value: value})
+	query.IsWhere = true
 	return query
 }
 
 func (query *Query) And(query_str string, value interface{}) *Query {
-	query.WhereCond = append(query.WhereCond, WhereStruct{Expression: query_str, Value: value, Delimiter: " And "})
+	if query.IsWhere == true {
+		query.WhereCond = append(query.WhereCond, WhereStruct{Expression: query_str, Value: value, Delimiter: " And "})
+	} else {
+		query.HavingCond = append(query.WhereCond, WhereStruct{Expression: query_str, Value: value, Delimiter: " And "})
+	}
 	return query
 }
 
 func (query *Query) Or(query_str string, value interface{}) *Query {
-	query.WhereCond = append(query.WhereCond, WhereStruct{Expression: query_str, Value: value, Delimiter: " Or "})
+	if query.IsWhere == true {
+		query.WhereCond = append(query.WhereCond, WhereStruct{Expression: query_str, Value: value, Delimiter: " Or "})
+	} else {
+		query.HavingCond = append(query.WhereCond, WhereStruct{Expression: query_str, Value: value, Delimiter: " Or "})
+	}
 	return query
 }
 
@@ -60,5 +71,12 @@ func (query *Query) GroupBy(value interface{}) *Query {
 // Distinct - add Distinct to sql queru
 func (query *Query) Distinct() *Query {
 	query.DistinctStruct = true
+	return query
+}
+
+// Having - having sql expression
+func (query *Query) Having(queryStr string, value interface{}) *Query {
+	query.HavingCond = append(query.HavingCond, WhereStruct{Expression: queryStr, Value: value})
+	query.IsWhere = false
 	return query
 }

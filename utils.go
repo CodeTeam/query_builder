@@ -18,9 +18,11 @@ func convertValueToString(value interface{}) string {
 	var result string
 	switch value := value.(type) {
 	case int:
-		result = strconv.Itoa(int(value)) //strings.Replace(expr, "?", strconv.Itoa(int(value)), -1)
+		result = strconv.Itoa(int(value))
+	case float64:
+		result = strconv.FormatFloat(value, 'f', 6, 64)
 	case string:
-		result = value //strings.Replace(expr, "?", value, -1)
+		result = value
 	case []int:
 		var res bytes.Buffer
 		for index, el := range value {
@@ -29,7 +31,16 @@ func convertValueToString(value interface{}) string {
 				res.WriteString(", ")
 			}
 		}
-		result = res.String() //strings.Replace(expr, "?", res.String(), -1)
+		result = res.String()
+	case []float64:
+		var res bytes.Buffer
+		for index, el := range value {
+			res.WriteString(strconv.FormatFloat(el, 'f', 6, 64))
+			if index != len(value)-1 {
+				res.WriteString(", ")
+			}
+		}
+		result = res.String()
 
 	}
 	return result

@@ -47,6 +47,21 @@ func (query *Query) BuildQuery() string {
 		}
 		buffer.WriteString(strings.Join(res[:], ", "))
 	}
-	buffer.WriteString(";")
+
+	if len(query.HavingCond) != 0 {
+		buffer.WriteString(" Having ")
+		for index, element := range query.HavingCond {
+			if index == 0 {
+				buffer.WriteString(
+					strings.Replace(element.Expression, "?", convertValueToString(element.Value), -1),
+				)
+			} else {
+				buffer.WriteString(element.Delimiter)
+				buffer.WriteString(
+					strings.Replace(element.Expression, "?", convertValueToString(element.Value), -1),
+				)
+			}
+		}
+	}
 	return buffer.String()
 }
