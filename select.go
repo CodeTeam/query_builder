@@ -4,28 +4,11 @@ import (
 	"strings"
 )
 
-type Query struct {
-	TypeQuery      string
-	Columns        []interface{}
-	TableName      string
-	WhereCond      []WhereStruct
-	HavingCond     []WhereStruct
-	GroupByStruct  []interface{}
-	DistinctStruct bool
-	IsWhere        bool
-}
-
-type WhereStruct struct {
-	Expression string
-	Value      interface{}
-	Delimiter  string
-}
-
 func Select(columns ...interface{}) *Query {
 
 	return &Query{
-		Columns:   columns,
-		TypeQuery: "Select",
+		Columns:   interfaceToString(columns),
+		TypeQuery: "select",
 	}
 }
 

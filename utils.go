@@ -9,7 +9,7 @@ func interfaceToString(input_int []interface{}) []string {
 	length := len(input_int)
 	columns := make([]string, length)
 	for index, element := range input_int {
-		columns[index] = element.(string)
+		columns[index] = convertValueToString(element)
 	}
 	return columns
 }

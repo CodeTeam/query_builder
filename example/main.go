@@ -37,4 +37,12 @@ func main() {
 
 	fmt.Println(b1.BuildQuery())
 
+	fmt.Println("=====UPDATE======")
+	u1 := qb.Update("table2").Fields("field1", "field2", "field3", "field4").
+	Values("st1", "st2", 10, 45.89).
+	Where("field1 = ?", 1).
+	Or("field3 = ?", "sfsdfds").
+	Returning("field1", "field2")
+	fmt.Println(u1.BuildQuery())
+
 }
