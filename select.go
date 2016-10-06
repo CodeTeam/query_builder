@@ -4,6 +4,7 @@ import (
 	"strings"
 )
 
+// Select - func add Select to sql
 func Select(columns ...interface{}) *Query {
 
 	return &Query{
@@ -12,40 +13,46 @@ func Select(columns ...interface{}) *Query {
 	}
 }
 
+// From - func add From to sql
 func (query *Query) From(table string) *Query {
 	query.TableName = strings.Replace(table, " ", "", -1)
 	return query
 }
 
+// FromSubquery - func add FromSubquery to sql
 func (query *Query) FromSubquery(table string) *Query {
 	query.TableName = "(" + table + ")"
 	return query
 }
 
-func (query *Query) Where(query_str string, value interface{}) *Query {
-	query.WhereCond = append(query.WhereCond, WhereStruct{Expression: query_str, Value: value})
+// Where - func add Where to sql
+func (query *Query) Where(queryStr string, value interface{}) *Query {
+	query.WhereCond = append(query.WhereCond, WhereStruct{Expression: queryStr, Value: value})
 	query.IsWhere = true
 	return query
 }
 
-func (query *Query) And(query_str string, value interface{}) *Query {
+// And - func add And to sql
+func (query *Query) And(queryStr string, value interface{}) *Query {
 	if query.IsWhere == true {
-		query.WhereCond = append(query.WhereCond, WhereStruct{Expression: query_str, Value: value, Delimiter: " And "})
+		query.WhereCond = append(query.WhereCond, WhereStruct{Expression: queryStr, Value: value, Delimiter: " And "})
 	} else {
-		query.HavingCond = append(query.WhereCond, WhereStruct{Expression: query_str, Value: value, Delimiter: " And "})
+		query.HavingCond = append(query.WhereCond, WhereStruct{Expression: queryStr, Value: value, Delimiter: " And "})
 	}
 	return query
 }
 
-func (query *Query) Or(query_str string, value interface{}) *Query {
+// Or - func add Or to sql
+func (query *Query) Or(queryStr string, value interface{}) *Query {
 	if query.IsWhere == true {
-		query.WhereCond = append(query.WhereCond, WhereStruct{Expression: query_str, Value: value, Delimiter: " Or "})
+		query.WhereCond = append(query.WhereCond, WhereStruct{Expression: queryStr, Value: value, Delimiter: " Or "})
 	} else {
-		query.HavingCond = append(query.WhereCond, WhereStruct{Expression: query_str, Value: value, Delimiter: " Or "})
+		query.HavingCond = append(query.WhereCond, WhereStruct{Expression: queryStr, Value: value, Delimiter: " Or "})
 	}
 	return query
 }
 
+// GroupBy - func add GroupBy to sql
 func (query *Query) GroupBy(value interface{}) *Query {
 	query.GroupByStruct = append(query.GroupByStruct, value)
 	return query
