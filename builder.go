@@ -35,6 +35,8 @@ func (query *Query) BuildQuery() string {
             res = buildUpdate(query)
         case query.TypeQuery == "insert":
             res = buildInsert(query)
+        case query.TypeQuery == "delete":
+            res = buildDelete(query)
     }
 
     return res
@@ -120,6 +122,17 @@ func buildInsert(query *Query) string {
     if len(query.ReturningStruct) != 0 {
         buffer.WriteString(buildReturning(query.ReturningStruct))
     }
+    return buffer.String()
+}
+
+func buildDelete(query *Query) string {
+    var buffer bytes.Buffer
+
+	buffer.WriteString("DELETE FROM ")
+    buffer.WriteString(query.TableName)
+    if len(query.WhereCond) != 0 {
+		buffer.WriteString(buildWhere(query.WhereCond))
+	}
     return buffer.String()
 }
 

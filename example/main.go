@@ -53,4 +53,10 @@ func main() {
 	Returning("field1")
 	fmt.Println(i1.BuildQuery())
 
+	fmt.Println("=====Delete======")
+	d1 := qb.Delete("table4").
+	Where("field1 = ?", 1).
+	Or("field3 = ?", "sfsdfds")
+	fmt.Println(d1.BuildQuery())
+
 }
