@@ -13,6 +13,7 @@ type Query struct {
 	HavingCond     []WhereStruct
     ValuesStruct   []string
     ReturningStruct      []string
+    RecordsSrtuct  []string
 	GroupByStruct  []interface{}
 	DistinctStruct bool
 	IsWhere        bool
@@ -28,10 +29,12 @@ type WhereStruct struct {
 func (query *Query) BuildQuery() string {
 	var res string
     switch {
-    case query.TypeQuery == "select":
-        res = buildSelect(query)
-    case query.TypeQuery == "update":
-        res = buildUpdate(query)
+        case query.TypeQuery == "select":
+            res = buildSelect(query)
+        case query.TypeQuery == "update":
+            res = buildUpdate(query)
+        case query.TypeQuery == "insert":
+            res = buildInsert(query)
     }
 
     return res
@@ -99,10 +102,24 @@ func buildUpdate(query *Query) string {
 		buffer.WriteString(buildWhere(query.WhereCond))
 	}
     if len(query.ReturningStruct) != 0 {
-        buffer.WriteString(" Returning ")
-        buffer.WriteString(strings.Join(query.ReturningStruct[:], ", "))
+        buffer.WriteString(buildReturning(query.ReturningStruct))
     }
     
+    return buffer.String()
+}
+
+func buildInsert(query *Query) string {
+    var buffer bytes.Buffer
+
+	buffer.WriteString("Insert Into ")
+    buffer.WriteString(query.TableName)
+    buffer.WriteString(" (")
+    buffer.WriteString(strings.Join(query.Columns[:], ", "))
+    buffer.WriteString(" ) Values ")
+    buffer.WriteString(strings.Join(query.RecordsSrtuct[:], ", "))
+    if len(query.ReturningStruct) != 0 {
+        buffer.WriteString(buildReturning(query.ReturningStruct))
+    }
     return buffer.String()
 }
 
@@ -124,3 +141,12 @@ func buildWhere(where []WhereStruct) string {
     }
     return buffer.String()
 }
+
+func buildReturning(returning []string) string {
+    var buffer bytes.Buffer
+
+    buffer.WriteString(" Returning ")
+    buffer.WriteString(strings.Join(returning[:], ", "))
+    return buffer.String()
+}
+

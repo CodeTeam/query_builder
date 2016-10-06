@@ -45,4 +45,12 @@ func main() {
 	Returning("field1", "field2")
 	fmt.Println(u1.BuildQuery())
 
+	fmt.Println("=====Insert======")
+	i1 := qb.Insert("table3").
+	Fields("field1", "field2", "field3", "field4").
+	Record("st1", "st2", 10, 45.89).
+	Record("st1", "st2", 10, 45.89).
+	Returning("field1")
+	fmt.Println(i1.BuildQuery())
+
 }
